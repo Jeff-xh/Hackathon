@@ -29,6 +29,7 @@ struct ContentView: View {
                         showPreview = true
                     }
                     .buttonStyle(.bordered)
+                    
                 }
             }
 
@@ -38,28 +39,25 @@ struct ContentView: View {
             LoginView(isPresented: $showLogin, isLoggedIn: $isLoggedIn)
         }
         .onAppear { // 在视图出现时请求跟踪授权
-            ATTrackingManager.requestTrackingAuthorization { status in
-                print("ATT Status: \(status)")
-            }
-            
-            ATTrackingManager.requestTrackingAuthorization { status in
-                // 在这里处理授权结果
-                switch status {
-                case .authorized:
-                    print("跟踪授权已授予")
-                case .denied:
-                    print("跟踪授权被拒绝")
-                case .notDetermined:
-                    print("用户尚未决定是否授予跟踪授权")
-                case .restricted:
-                    print("跟踪授权受到限制")
-                @unknown default:
-                    print("未知的授权状态")
+            if #available(iOS 14, *) {
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) { // 延迟2秒
+                    ATTrackingManager.requestTrackingAuthorization { status in
+                        switch status {
+                        case .authorized:
+                            print("跟踪授权已授予")
+                        case .denied:
+                            print("跟踪授权被拒绝")
+                        case .notDetermined:
+                            print("用户尚未决定是否授予跟踪授权")
+                        case .restricted:
+                            print("跟踪授权受到限制")
+                        @unknown default:
+                            print("未知的授权状态")
+                        }
+                    }
                 }
-                let idfa = ASIdentifierManager.shared().advertisingIdentifier
-                                print("IDFA: \(idfa.uuidString)")
-                // 仅用于调试，查看是否请求了跟踪授权
             }
         }
     }
 }
+
