@@ -4,7 +4,7 @@ struct LoginView: View {
     @Binding var isPresented: Bool
     @Binding var isLoggedIn: Bool
     @State private var showSuccessAlert = false
-    @State private var loginMethod: LoginMethod = .email  // 默认注册方式为邮箱
+    @State private var loginMethod: LoginMethod = .email
     @State private var email = ""
     @State private var password = ""
     @State private var phoneNumber = ""
@@ -41,7 +41,7 @@ struct LoginView: View {
                     .textFieldStyle(.roundedBorder)
                 SecureField("密码", text: $password)
                     .textFieldStyle(.roundedBorder)
-            } else {
+            } else if loginMethod == .phone {
                 TextField("手机号", text: $phoneNumber)
                     .textFieldStyle(.roundedBorder)
                 SecureField("密码", text: $password)
@@ -61,9 +61,9 @@ struct LoginView: View {
                 
                 Button("注册") {
                     if loginMethod == .email {
-                        // 邮箱登录逻辑，在这里添加ODM代码，所需的邮件变量名为email
-                    } else {
-                        // 手机号登录逻辑，在这里添加ODM代码，所需的手机号变量名为phoneNumber
+                        // 邮箱注册逻辑，在这里添加ODM代码
+                    } else if loginMethod == .phone {
+                        // 手机号注册逻辑，在这里添加ODM代码
                     }
                     
                     showSuccessAlert = true
@@ -86,4 +86,3 @@ struct LoginView: View {
         }
     }
 }
-
